@@ -80,6 +80,7 @@ def login():
 
 @app.route('/autenticar', methods=['POST'])
 def autenticar():
+    erro = False
     usuario = usuario_dao.buscar_por_id(request.form['usuario'])
     if usuario:
         if usuario.senha == request.form['senha']:
@@ -87,10 +88,14 @@ def autenticar():
             flash(usuario.nome + ' logou com sucesso!', category='success')
             proxima_pagina = request.form['proxima']
             return redirect(proxima_pagina)
+        else:
+            erro = True
     else:
+        erro = True
+
+    if erro:
         flash('Não logado, tente denovo!', category='danger')
         return redirect(url_for('login'))
-
 
 @app.route('/logout')
 def logout():
